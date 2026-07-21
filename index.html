@@ -1,120 +1,10 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="fr">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
-  <meta name="theme-color" content="#111827" />
-  <title>Paiements tournoi</title>
-  <style>
-    :root{
-      --bg:#0f172a; --card:#111827; --soft:#1f2937; --line:#374151;
-      --text:#f9fafb; --muted:#9ca3af; --accent:#f59e0b; --accent2:#fbbf24;
-      --danger:#ef4444; --success:#22c55e;
-    }
-    *{box-sizing:border-box}
-    body{
-      margin:0;
-      font-family:system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
-      background:linear-gradient(180deg,#0b1220 0%,var(--bg) 100%);
-      color:var(--text);
-      min-height:100vh;
-    }
-    .app{
-      width:min(760px,100%);
-      margin:0 auto;
-      padding:20px 14px calc(28px + env(safe-area-inset-bottom));
-    }
-    h1{margin:4px 0 6px;font-size:clamp(1.7rem,7vw,2.4rem);line-height:1.05}
-    .subtitle{color:var(--muted);margin:0 0 18px}
-    .card{
-      background:rgba(17,24,39,.96);
-      border:1px solid rgba(255,255,255,.08);
-      border-radius:18px;
-      padding:16px;
-      box-shadow:0 14px 35px rgba(0,0,0,.28);
-      margin-bottom:14px;
-    }
-    label{display:block;font-weight:700;margin-bottom:7px}
-    input,button{font:inherit}
-    input[type="text"], input[type="number"]{
-      width:100%;
-      border:1px solid var(--line);
-      background:#0b1220;
-      color:var(--text);
-      border-radius:12px;
-      padding:13px 12px;
-      outline:none;
-    }
-    input:focus{border-color:var(--accent);box-shadow:0 0 0 3px rgba(245,158,11,.16)}
-    .add-grid{display:grid;grid-template-columns:1fr 110px;gap:10px}
-    .actions{display:flex;gap:10px;margin-top:12px;flex-wrap:wrap}
-    button{
-      border:0;border-radius:12px;padding:13px 15px;font-weight:800;cursor:pointer;
-    }
-    .primary{flex:1;color:#111827;background:linear-gradient(135deg,var(--accent2),var(--accent))}
-    .secondary{background:var(--soft);color:var(--text);border:1px solid var(--line)}
-    .danger{background:rgba(239,68,68,.14);color:#fecaca;border:1px solid rgba(239,68,68,.4)}
-    .summary{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}
-    .stat{
-      background:#0b1220;border:1px solid var(--line);border-radius:14px;
-      padding:13px 10px;text-align:center;
-    }
-    .stat strong{display:block;color:var(--accent2);font-size:1.4rem;margin-top:3px}
-    .list{display:grid;gap:10px}
-    .player{
-      display:grid;
-      grid-template-columns:1fr auto auto auto;
-      align-items:center;
-      gap:10px;
-      background:#0b1220;
-      border:1px solid var(--line);
-      border-radius:14px;
-      padding:11px;
-    }
-    .player.paid{
-      border-color:rgba(34,197,94,.65);
-      background:rgba(34,197,94,.08);
-    }
-    .check{
-      width:28px;height:28px;
-      accent-color:var(--success);
-      cursor:pointer;
-    }
-    .player-name{font-weight:800;overflow-wrap:anywhere}
-    .amount{color:var(--success);font-weight:900;white-space:nowrap}
-    .delete{
-      padding:9px 11px;background:rgba(239,68,68,.12);color:#fecaca;
-      border:1px solid rgba(239,68,68,.35);
-    }
-    .empty{
-      color:var(--muted);text-align:center;padding:22px 8px;
-      border:1px dashed var(--line);border-radius:14px;
-    }
-    .note{color:var(--muted);font-size:.9rem;margin:10px 0 0}
-    .footer{text-align:center;color:var(--muted);font-size:.82rem;margin-top:16px}
-    .modal{position:fixed;inset:0;background:rgba(0,0,0,.72);display:none;align-items:center;justify-content:center;padding:18px;z-index:9999}
-    .modal.open{display:flex}
-    .modal-box{width:min(420px,100%);background:var(--card);border:1px solid var(--line);border-radius:18px;padding:18px}
-    .modal-player{color:var(--accent2);font-weight:900;margin:6px 0 14px}
-    .choice-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:12px}
-    .addon{background:rgba(34,197,94,.15);color:#bbf7d0;border:1px solid rgba(34,197,94,.45)}
-    .rebuy{background:rgba(245,158,11,.15);color:#fde68a;border:1px solid rgba(245,158,11,.45)}
-    .extras{font-size:.82rem;color:var(--muted);margin-top:4px}
-    .prize-grid{display:grid;grid-template-columns:140px 1fr;gap:12px;align-items:end}
-    .prize-list{display:grid;gap:10px;margin-top:14px}
-    .prize-row{display:flex;justify-content:space-between;gap:12px;background:#0b1220;border:1px solid var(--line);border-radius:12px;padding:12px}
-    .prize-row strong{color:var(--accent2)}
-    .rule{color:var(--muted);font-size:.9rem;margin-top:10px}
-    @media (max-width:520px){
-      .add-grid{grid-template-columns:1fr 95px}
-      .summary{grid-template-columns:1fr}
-      .player{grid-template-columns:1fr auto}
-      .player button{width:100%}
-      .delete{grid-column:auto}
-    }
-  </style>
-
-  <meta name="description" content="Gestion des paiements, add-ons, re-buys et du prizepool des tournois de poker.">
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+  <meta name="theme-color" content="#090b0f">
+  <meta name="description" content="Gestion des entrées, add-ons, re-buys et du prizepool d'un tournoi de poker.">
   <meta name="application-name" content="Poklistered">
   <meta name="mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-capable" content="yes">
@@ -123,449 +13,426 @@
   <link rel="manifest" href="./manifest.webmanifest">
   <link rel="icon" type="image/png" sizes="192x192" href="./icon-192.png">
   <link rel="apple-touch-icon" href="./icon-192.png">
-
+  <title>Poklistered</title>
+  <style>
+    :root{
+      --bg:#080a0e; --card:#101319; --card2:#0c0f14; --line:#262b34;
+      --text:#f6f3ea; --muted:#9ca3af; --gold:#d7a63c; --gold2:#f4cf72;
+      --green:#32c46a; --red:#ef4444; --orange:#f59e0b;
+    }
+    *{box-sizing:border-box}
+    body{
+      margin:0; min-height:100vh; color:var(--text);
+      font-family:Inter,system-ui,-apple-system,"Segoe UI",sans-serif;
+      background:radial-gradient(circle at top,#17130c 0,#080a0e 35%);
+    }
+    button,input{font:inherit}
+    button{cursor:pointer}
+    .app{width:min(760px,100%);margin:auto;padding:14px 12px 42px}
+    .topbar{
+      display:flex;align-items:center;gap:12px;margin-bottom:12px;
+      padding:10px 4px;
+    }
+    .logo{width:66px;height:66px;object-fit:contain;border-radius:15px}
+    .title h1{margin:0;font-size:1.7rem;color:var(--gold2);letter-spacing:.2px}
+    .title p{margin:3px 0 0;color:var(--muted);font-size:.9rem}
+    .card{
+      background:linear-gradient(180deg,#12161c,#0d1015);
+      border:1px solid var(--line);border-radius:17px;padding:14px;
+      box-shadow:0 12px 32px rgba(0,0,0,.24);margin-bottom:12px;
+    }
+    h2{margin:0 0 11px;font-size:1.08rem;color:var(--gold2)}
+    label{display:block;color:#d7d9de;font-weight:700;font-size:.86rem;margin-bottom:6px}
+    input{
+      width:100%;border:1px solid var(--line);background:#080b10;color:var(--text);
+      border-radius:11px;padding:11px 12px;outline:none;
+    }
+    input:focus{border-color:var(--gold);box-shadow:0 0 0 3px rgba(215,166,60,.12)}
+    .settings{display:grid;grid-template-columns:repeat(3,1fr);gap:9px}
+    .setting-note{margin-top:9px;color:var(--muted);font-size:.8rem}
+    .add-row{display:grid;grid-template-columns:1fr auto;gap:9px}
+    .btn{
+      border-radius:11px;border:1px solid var(--line);padding:10px 12px;
+      font-weight:800;background:#1a1f27;color:var(--text)
+    }
+    .btn-gold{background:linear-gradient(135deg,var(--gold2),var(--gold));color:#18120a;border:0}
+    .btn-danger{color:#fecaca;background:#ef44441c;border-color:#ef444455}
+    .btn-small{padding:7px 9px;border-radius:9px;font-size:.82rem}
+    .summary{display:grid;grid-template-columns:repeat(5,1fr);gap:7px}
+    .stat{background:#090c11;border:1px solid var(--line);border-radius:12px;padding:9px 5px;text-align:center}
+    .stat span{display:block;color:var(--muted);font-size:.72rem}
+    .stat strong{display:block;color:var(--gold2);font-size:1.08rem;margin-top:3px}
+    .section-head{display:flex;justify-content:space-between;align-items:center;gap:10px}
+    .count{color:var(--muted);font-size:.82rem}
+    .players{display:grid;gap:7px}
+    .player{
+      background:#090c11;border:1px solid var(--line);border-radius:12px;
+      padding:9px 9px 8px;display:grid;grid-template-columns:minmax(0,1fr) auto;
+      gap:7px;align-items:center;
+    }
+    .player.paid{border-color:rgba(50,196,106,.45)}
+    .player-name{font-weight:850;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+    .player-total{color:var(--gold2);font-weight:900;font-size:.92rem}
+    .player-actions{grid-column:1/-1;display:flex;gap:6px;align-items:center;flex-wrap:wrap}
+    .pill{
+      display:inline-flex;align-items:center;gap:5px;border:1px solid var(--line);
+      background:#12161c;border-radius:9px;padding:5px 7px;font-size:.77rem;color:#d9dde5
+    }
+    .pill strong{color:var(--gold2)}
+    .mini-btn{
+      width:27px;height:27px;border-radius:8px;border:1px solid var(--line);
+      background:#171c23;color:var(--text);font-weight:900;padding:0
+    }
+    .pay-btn{margin-left:auto}
+    .empty{padding:14px;text-align:center;color:var(--muted);border:1px dashed var(--line);border-radius:12px}
+    .prize-grid{display:grid;grid-template-columns:130px 1fr;gap:10px;align-items:end}
+    .prizes{display:grid;gap:6px;margin-top:11px}
+    .prize{display:flex;justify-content:space-between;background:#090c11;border:1px solid var(--line);border-radius:10px;padding:9px 11px}
+    .prize strong{color:var(--gold2)}
+    .rules{color:var(--muted);font-size:.8rem;margin-top:8px;line-height:1.4}
+    .bottom-actions{display:flex;gap:7px;flex-wrap:wrap}
+    .toast{
+      position:fixed;left:50%;bottom:20px;transform:translateX(-50%) translateY(20px);
+      background:#171c23;border:1px solid var(--line);color:white;padding:10px 14px;border-radius:11px;
+      opacity:0;pointer-events:none;transition:.2s;z-index:50;max-width:90%;text-align:center
+    }
+    .toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
+    @media(max-width:620px){
+      .settings{grid-template-columns:1fr 1fr}
+      .summary{grid-template-columns:repeat(3,1fr)}
+      .logo{width:58px;height:58px}
+      .title h1{font-size:1.45rem}
+    }
+  </style>
 </head>
 <body>
-  <main class="app">
-    <h1>Paiements tournoi</h1>
-    <p class="subtitle">Enregistre les joueurs une seule fois, puis coche ceux qui ont payé.</p>
-
-    <section class="card">
-      <div class="add-grid">
-        <div>
-          <label for="pseudo">Nouveau joueur</label>
-          <input id="pseudo" type="text" placeholder="Ex. Kerland" autocomplete="off" />
-        </div>
-        <div>
-          <label for="montant">Montant</label>
-          <input id="montant" type="number" min="0" step="0.01" value="10" inputmode="decimal" />
-        </div>
-      </div>
-      <div class="actions">
-        <button class="primary" id="ajouter">Ajouter à la liste</button>
-        <button class="secondary" id="nouveauTournoi">Nouveau tournoi</button>
-      </div>
-      <p class="note" id="etatSauvegarde">Les pseudos et les coches sont sauvegardés automatiquement.</p>
-    </section>
-
-    <section class="card">
-      <div class="summary">
-        <div class="stat">Joueurs enregistrés<strong id="nbJoueurs">0</strong></div>
-        <div class="stat">Ont payé<strong id="nbPayes">0</strong></div>
-        <div class="stat">Add-ons<strong id="nbAddons">0</strong></div>
-        <div class="stat">Re-buys<strong id="nbRebuys">0</strong></div>
-        <div class="stat">Total encaissé<strong id="total">0,00 €</strong></div>
-      </div>
-    </section>
-
-    <section class="card">
-      <h2 style="margin:0 0 12px;">Répartition du prizepool</h2>
-      <div class="prize-grid">
-        <div>
-          <label for="placesPayees">Places payées</label>
-          <input id="placesPayees" type="number" min="1" step="1" value="2" inputmode="numeric">
-        </div>
-        <div class="note">Le prizepool correspond au total encaissé. Le nombre de places est libre, sans dépasser le nombre de joueurs ayant payé.</div>
-      </div>
-      <div id="repartitionPrizepool" class="prize-list"></div>
-      <div id="reglePrizepool" class="rule"></div>
-    </section>
-
-    <section class="card">
-      <h2 style="margin:0 0 12px;color:#fbbf24;">Non payés</h2>
-      <div id="listeNonPayes" class="list"></div>
-    </section>
-
-    <section class="card">
-      <h2 style="margin:0 0 12px;color:#22c55e;">Payés</h2>
-      <div id="listePayes" class="list"></div>
-    </section>
-
-    <section class="card">
-      <div class="actions">
-        <button class="primary" id="envoyerSms">Envoyer la liste par SMS</button>
-        <button class="secondary" id="toutCocher">Tout cocher</button>
-        <button class="secondary" id="toutDecocher">Tout décocher</button>
-        <button class="danger" id="vider">Supprimer tous les joueurs</button>
-      </div>
-    </section>
-
-    <div class="footer">Application autonome — les données restent sur ce téléphone.</div>
-  </main>
-  <div class="modal" id="modalExtra">
-    <div class="modal-box">
-      <h3>Add-on ou re-buy</h3>
-      <div class="modal-player" id="modalJoueur"></div>
-      <label for="montantExtra">Montant</label>
-      <input id="montantExtra" type="number" min="0" step="0.01" value="10" inputmode="decimal">
-      <div class="choice-grid">
-        <button class="addon" id="choixAddon">Ajouter un add-on</button>
-        <button class="rebuy" id="choixRebuy">Ajouter un re-buy</button>
-      </div>
-      <div class="actions"><button class="secondary" id="fermerModal">Annuler</button></div>
+<div class="app">
+  <header class="topbar">
+    <img class="logo" src="./logo.png" alt="Logo Poklistered">
+    <div class="title">
+      <h1>Poklistered</h1>
+      <p>Entrées, add-ons, re-buys et prizepool</p>
     </div>
-  </div>
+  </header>
 
-  <script>
-    const STORAGE_KEY = "liste-joueurs-paiements-v3";
-    let joueurs = [];
+  <section class="card">
+    <h2>Réglages du tournoi</h2>
+    <div class="settings">
+      <div><label for="buyin">Buy-in commun</label><input id="buyin" type="number" min="0" step=".01" inputmode="decimal"></div>
+      <div><label for="addonPrice">Prix add-on</label><input id="addonPrice" type="number" min="0" step=".01" inputmode="decimal"></div>
+      <div><label for="rebuyPrice">Prix re-buy</label><input id="rebuyPrice" type="number" min="0" step=".01" inputmode="decimal"></div>
+    </div>
+    <div class="setting-note">Le buy-in est indépendant du pseudo. Toute modification s'applique automatiquement à tous les joueurs.</div>
+  </section>
 
-    const pseudo = document.getElementById("pseudo");
-    const montant = document.getElementById("montant");
-    const listeNonPayes = document.getElementById("listeNonPayes");
-    const listePayes = document.getElementById("listePayes");
-    const nbJoueurs = document.getElementById("nbJoueurs");
-    const nbPayes = document.getElementById("nbPayes");
-    const total = document.getElementById("total");
-    const nbAddons = document.getElementById("nbAddons");
-    const nbRebuys = document.getElementById("nbRebuys");
-    const modalExtra = document.getElementById("modalExtra");
-    const modalJoueur = document.getElementById("modalJoueur");
-    const montantExtra = document.getElementById("montantExtra");
-    let joueurSelectionneId = null;
-    const placesPayees = document.getElementById("placesPayees");
-    const repartitionPrizepool = document.getElementById("repartitionPrizepool");
-    const reglePrizepool = document.getElementById("reglePrizepool");
+  <section class="card">
+    <h2>Ajouter un joueur</h2>
+    <div class="add-row">
+      <input id="pseudo" placeholder="Pseudo du joueur" autocomplete="off">
+      <button id="addPlayer" class="btn btn-gold">Ajouter</button>
+    </div>
+  </section>
 
-    function euro(valeur){
-      return new Intl.NumberFormat("fr-FR", {
-        style:"currency", currency:"EUR"
-      }).format(valeur);
-    }
+  <section class="card">
+    <div class="summary">
+      <div class="stat"><span>Joueurs</span><strong id="sPlayers">0</strong></div>
+      <div class="stat"><span>Entrées</span><strong id="sEntries">0</strong></div>
+      <div class="stat"><span>Add-ons</span><strong id="sAddons">0</strong></div>
+      <div class="stat"><span>Re-buys</span><strong id="sRebuys">0</strong></div>
+      <div class="stat"><span>Total</span><strong id="sTotal">0 €</strong></div>
+    </div>
+  </section>
 
-    function sauvegarder(){
-      localStorage.setItem(STORAGE_KEY, JSON.stringify(joueurs));
-      const etat = document.getElementById("etatSauvegarde");
-      const heure = new Date().toLocaleTimeString("fr-FR", {hour:"2-digit", minute:"2-digit"});
-      etat.textContent = "Sauvegardé automatiquement à " + heure;
-    }
+  <section class="card">
+    <div class="section-head"><h2>Non payés</h2><span class="count" id="unpaidCount"></span></div>
+    <div class="players" id="unpaid"></div>
+  </section>
 
-    function charger(){
-      try{
-        const data = JSON.parse(localStorage.getItem(STORAGE_KEY) || "[]");
-        joueurs = Array.isArray(data) ? data.map(j => ({
-          ...j,
-          addons: Array.isArray(j.addons) ? j.addons : [],
-          rebuys: Array.isArray(j.rebuys) ? j.rebuys : []
-        })) : [];
-      }catch{
-        joueurs = [];
-      }
-    }
+  <section class="card">
+    <div class="section-head"><h2>Payés</h2><span class="count" id="paidCount"></span></div>
+    <div class="players" id="paid"></div>
+  </section>
 
-    function creerLigne(joueur){
-      const index = joueurs.findIndex(j => j.id === joueur.id);
-      const ligne = document.createElement("div");
-      ligne.className = "player" + (joueur.paye ? " paid" : "");
+  <section class="card">
+    <h2>Répartition du prizepool</h2>
+    <div class="prize-grid">
+      <div><label for="paidPlaces">Places payées</label><input id="paidPlaces" type="number" min="1" step="1" inputmode="numeric"></div>
+      <div class="rules">Nombre libre, limité au nombre de joueurs ayant payé. La dernière place rembourse toujours le buy-in.</div>
+    </div>
+    <div class="prizes" id="prizes"></div>
+    <div class="rules" id="prizeRule"></div>
+  </section>
 
-      const nom = document.createElement("div");
-      nom.className = "player-name";
-      nom.textContent = joueur.pseudo;
-
-      const somme = document.createElement("div");
-      somme.className = "amount";
-      somme.textContent = joueur.paye ? euro(joueur.montant) : euro(joueur.montant);
-
-      const action = document.createElement("button");
-      action.className = joueur.paye ? "secondary" : "primary";
-      action.style.flex = "initial";
-      action.style.padding = "9px 11px";
-      action.textContent = joueur.paye ? "Remettre non payé" : "Marquer payé";
-
-      action.addEventListener("click", () => {
-        const message = joueur.paye
-          ? "Confirmer que " + joueur.pseudo + " n'a finalement pas payé ?"
-          : "Confirmer le paiement de " + joueur.pseudo + " ?";
-        if(confirm(message)){
-          joueurs[index].paye = !joueur.paye;
-          sauvegarder();
-          afficher();
-        }
-      });
-
-      const supprimer = document.createElement("button");
-      supprimer.className = "delete";
-      supprimer.textContent = "Supprimer";
-      supprimer.addEventListener("click", () => {
-        if(confirm("Supprimer " + joueur.pseudo + " de la liste permanente ?")){
-          joueurs.splice(index, 1);
-          sauvegarder();
-          afficher();
-        }
-      });
-
-      if(joueur.paye){
-        const extras = document.createElement("div");
-        extras.className = "extras";
-        extras.textContent = "Add-on : " + (joueur.addons || []).length + " • Re-buy : " + (joueur.rebuys || []).length;
-        nom.appendChild(extras);
-
-        const extraBtn = document.createElement("button");
-        extraBtn.className = "secondary";
-        extraBtn.textContent = "Add-on / Re-buy";
-        extraBtn.addEventListener("click", () => ouvrirModalExtra(joueur.id));
-        ligne.append(nom, somme, extraBtn, action, supprimer);
-      } else {
-        ligne.append(nom, somme, action, supprimer);
-      }
-      return ligne;
-    }
-
-    function calculerRepartition(prizepool){
-      const placesDemandees = Math.max(1, Math.floor(Number(placesPayees.value) || 1));
-      const joueursPayes = joueurs.filter(j => j.paye).length;
-      const places = Math.min(placesDemandees, Math.max(1, joueursPayes));
-      const buyInInput = document.getElementById("montant");
-      const buyIn = Math.max(0, Number(buyInInput.value) || 0);
-
-      if(prizepool <= 0){
-        return {resultats: [], texte: "Aucun prizepool à répartir pour le moment."};
-      }
-
-      if(places === 1){
-        return {
-          resultats: [{place: 1, montant: Math.round(prizepool * 100) / 100}],
-          texte: "Une seule place payée : 100 % du prizepool au premier."
-        };
-      }
-
-      const resultats = [];
-      const remboursementDernier = Math.min(buyIn, prizepool);
-      resultats.push({place: places, montant: remboursementDernier});
-
-      const reste = Math.max(0, prizepool - remboursementDernier);
-      const nbAutresPlaces = places - 1;
-
-      // Répartition traditionnelle décroissante :
-      // poids du premier = nombre de places restantes,
-      // puis un poids de moins à chaque rang.
-      // Exemple pour 5 places : poids 4, 3, 2, 1 puis buy-in au 5e.
-      const poids = [];
-      for(let i = nbAutresPlaces; i >= 1; i--){
-        poids.push(i);
-      }
-
-      const totalPoids = poids.reduce((s, p) => s + p, 0);
-      let distribue = 0;
-
-      for(let i = 0; i < nbAutresPlaces; i++){
-        let montant;
-        if(i === nbAutresPlaces - 1){
-          montant = Math.round((reste - distribue) * 100) / 100;
-        }else{
-          montant = Math.round((reste * poids[i] / totalPoids) * 100) / 100;
-          distribue += montant;
-        }
-        resultats.push({place: i + 1, montant});
-      }
-
-      return {
-        resultats,
-        texte:
-          "La dernière place rembourse toujours le buy-in. " +
-          "Le solde est réparti de façon décroissante entre les autres places."
-      };
-    }
-
-    function afficherRepartition(prizepool){
-      const calcul = calculerRepartition(prizepool);
-      repartitionPrizepool.innerHTML = "";
-
-      if(!calcul.resultats.length){
-        repartitionPrizepool.innerHTML = '<div class="empty">Aucun montant à répartir.</div>';
-      }else{
-        calcul.resultats
-          .sort((a,b) => a.place - b.place)
-          .forEach(item => {
-            const ligne = document.createElement("div");
-            ligne.className = "prize-row";
-            ligne.innerHTML = "<span>" + item.place + (item.place === 1 ? "er" : "e") + " place</span><strong>" + euro(item.montant) + "</strong>";
-            repartitionPrizepool.appendChild(ligne);
-          });
-      }
-
-      reglePrizepool.textContent = calcul.texte;
-    }
-
-    function afficher(){
-      listeNonPayes.innerHTML = "";
-      listePayes.innerHTML = "";
-
-      const tries = joueurs
-        .slice()
-        .sort((a,b) => a.pseudo.localeCompare(b.pseudo, "fr", {sensitivity:"base"}));
-
-      const nonPayes = tries.filter(j => !j.paye);
-      const payes = tries.filter(j => j.paye);
-
-      if(nonPayes.length === 0){
-        listeNonPayes.innerHTML = '<div class="empty">Tous les joueurs ont payé.</div>';
-      } else {
-        nonPayes.forEach(joueur => listeNonPayes.appendChild(creerLigne(joueur)));
-      }
-
-      if(payes.length === 0){
-        listePayes.innerHTML = '<div class="empty">Aucun paiement enregistré.</div>';
-      } else {
-        payes.forEach(joueur => listePayes.appendChild(creerLigne(joueur)));
-      }
-
-      const totalEntrees = payes.reduce((acc, j) => acc + Number(j.montant || 0), 0);
-      const totalAddons = payes.reduce((acc,j) => acc + (j.addons || []).reduce((s,v)=>s+Number(v||0),0), 0);
-      const totalRebuys = payes.reduce((acc,j) => acc + (j.rebuys || []).reduce((s,v)=>s+Number(v||0),0), 0);
-      nbJoueurs.textContent = joueurs.length;
-      nbPayes.textContent = payes.length;
-      nbAddons.textContent = payes.reduce((acc,j)=>acc+(j.addons||[]).length,0);
-      nbRebuys.textContent = payes.reduce((acc,j)=>acc+(j.rebuys||[]).length,0);
-      const prizepool = totalEntrees + totalAddons + totalRebuys;
-      total.textContent = euro(prizepool);
-      afficherRepartition(prizepool);
-    }
-
-    function ajouterJoueur(){
-      const nom = pseudo.value.trim();
-      const valeur = Number(String(montant.value).replace(",", "."));
-
-      if(!nom){
-        alert("Entre un pseudo.");
-        pseudo.focus();
-        return;
-      }
-
-      if(!Number.isFinite(valeur) || valeur < 0){
-        alert("Entre un montant valide.");
-        montant.focus();
-        return;
-      }
-
-      const existe = joueurs.some(j => j.pseudo.toLowerCase() === nom.toLowerCase());
-      if(existe){
-        alert("Ce joueur est déjà dans la liste.");
-        return;
-      }
-
-      joueurs.push({
-        id: Date.now().toString(36) + Math.random().toString(36).slice(2),
-        pseudo: nom,
-        montant: Math.round(valeur * 100) / 100,
-        paye: false,
-        addons: [],
-        rebuys: []
-      });
-
-      joueurs.sort((a,b)=>a.pseudo.localeCompare(b.pseudo,"fr",{sensitivity:"base"}));
-
-      sauvegarder();
-      afficher();
-      pseudo.value = "";
-      pseudo.focus();
-    }
-
-    document.getElementById("ajouter").addEventListener("click", ajouterJoueur);
-    pseudo.addEventListener("keydown", e => { if(e.key === "Enter") ajouterJoueur(); });
-    montant.addEventListener("keydown", e => { if(e.key === "Enter") ajouterJoueur(); });
-
-    document.getElementById("nouveauTournoi").addEventListener("click", () => {
-      if(confirm("Démarrer un nouveau tournoi ? Les pseudos seront conservés et toutes les coches seront remises à zéro.")){
-        joueurs = joueurs.map(j => ({...j, paye:false, addons:[], rebuys:[]}));
-        sauvegarder();
-        afficher();
-      }
-    });
-
-    document.getElementById("envoyerSms").addEventListener("click", () => {
-      const payes = joueurs
-        .filter(j => j.paye)
-        .sort((a,b) => a.pseudo.localeCompare(b.pseudo, "fr", {sensitivity:"base"}));
-
-      if(payes.length === 0){
-        alert("Aucun joueur n'a encore payé.");
-        return;
-      }
-
-      const totalEncaisse = payes.reduce((acc, j) => acc + Number(j.montant || 0), 0);
-      const message = [
-        "Joueurs ayant payé :",
-        "",
-        ...payes.map((j, i) => (i + 1) + ". " + j.pseudo + " - " + euro(j.montant)),
-        "",
-        "Nombre de joueurs : " + payes.length,
-        "Total encaissé : " + euro(totalEncaisse)
-      ].join("\n");
-
-      const smsUrl = "sms:?body=" + encodeURIComponent(message);
-      window.location.href = smsUrl;
-    });
-
-    function ouvrirModalExtra(id){
-      const joueur = joueurs.find(j => j.id === id);
-      if(!joueur || !joueur.paye){ alert("Le joueur doit d'abord avoir payé son entrée."); return; }
-      joueurSelectionneId = id;
-      modalJoueur.textContent = joueur.pseudo;
-      montantExtra.value = joueur.montant || 10;
-      modalExtra.classList.add("open");
-    }
-
-    function fermerModalExtra(){
-      modalExtra.classList.remove("open");
-      joueurSelectionneId = null;
-    }
-
-    function ajouterExtra(type){
-      const joueur = joueurs.find(j => j.id === joueurSelectionneId);
-      const valeur = Number(String(montantExtra.value).replace(",", "."));
-      if(!joueur || !joueur.paye){ alert("Le joueur doit avoir payé son entrée."); return; }
-      if(!Number.isFinite(valeur) || valeur < 0){ alert("Entre un montant valide."); return; }
-      if(type === "addon") joueur.addons.push(valeur);
-      else joueur.rebuys.push(valeur);
-      sauvegarder();
-      afficher();
-      fermerModalExtra();
-    }
-
-    placesPayees.addEventListener("input", afficher);
-    document.getElementById("montant").addEventListener("input", afficher);
-    document.getElementById("choixAddon").addEventListener("click", () => ajouterExtra("addon"));
-    document.getElementById("choixRebuy").addEventListener("click", () => ajouterExtra("rebuy"));
-    document.getElementById("fermerModal").addEventListener("click", fermerModalExtra);
-    modalExtra.addEventListener("click", e => { if(e.target === modalExtra) fermerModalExtra(); });
-
-    document.getElementById("toutCocher").addEventListener("click", () => {
-      joueurs = joueurs.map(j => ({...j, paye:true}));
-      sauvegarder();
-      afficher();
-    });
-
-    document.getElementById("toutDecocher").addEventListener("click", () => {
-      joueurs = joueurs.map(j => ({...j, paye:false, addons:[], rebuys:[]}));
-      sauvegarder();
-      afficher();
-    });
-
-    document.getElementById("vider").addEventListener("click", () => {
-      if(confirm("Supprimer définitivement tous les pseudos enregistrés ?")){
-        joueurs = [];
-        sauvegarder();
-        afficher();
-      }
-    });
-
-    charger();
-    afficher();
-  </script>
+  <section class="card">
+    <div class="bottom-actions">
+      <button id="newTournament" class="btn btn-gold">Nouveau tournoi</button>
+      <button id="sms" class="btn">Partager le bilan</button>
+      <button id="deleteAll" class="btn btn-danger">Supprimer tous les joueurs</button>
+    </div>
+  </section>
+</div>
+<div class="toast" id="toast"></div>
 
 <script>
-  if ("serviceWorker" in navigator) {
-    window.addEventListener("load", async () => {
-      try {
-        const registration = await navigator.serviceWorker.register("./service-worker.js", { scope: "./" });
-        registration.update();
-      } catch (error) {
-        console.error("Service worker non enregistré :", error);
+(() => {
+  const KEY = "poklistered-clean-v2";
+  const OLD_KEYS = ["poklistered-joueurs-v4","poklistered-joueurs-v3"];
+  const $ = id => document.getElementById(id);
+  const euro = n => new Intl.NumberFormat("fr-FR",{style:"currency",currency:"EUR"}).format(Number(n)||0);
+  const round = n => Math.round((Number(n)||0)*100)/100;
+
+  let data = {
+    buyin:10, addonPrice:10, rebuyPrice:10, paidPlaces:2, players:[]
+  };
+
+  function migrateOld(){
+    for(const key of OLD_KEYS){
+      try{
+        const old = JSON.parse(localStorage.getItem(key)||"null");
+        if(Array.isArray(old) && old.length){
+          data.players = old.map((p,i)=>({
+            id:p.id || (Date.now()+i).toString(36),
+            pseudo:String(p.pseudo||"Joueur"),
+            paid:!!(p.paye ?? p.paid),
+            addons:Array.isArray(p.addons)?p.addons.length:Number(p.addons||0),
+            rebuys:Array.isArray(p.rebuys)?p.rebuys.length:Number(p.rebuys||0)
+          }));
+          const firstAmount = old.find(p=>Number(p.montant)>0);
+          if(firstAmount) data.buyin = Number(firstAmount.montant);
+          save();
+          return true;
+        }
+      }catch{}
+    }
+    return false;
+  }
+
+  function load(){
+    try{
+      const saved = JSON.parse(localStorage.getItem(KEY)||"null");
+      if(saved && typeof saved==="object"){
+        data = {...data,...saved};
+        data.players = Array.isArray(saved.players)?saved.players:[];
+      } else migrateOld();
+    }catch{ migrateOld(); }
+    normalize();
+  }
+
+  function normalize(){
+    data.buyin = Math.max(0,Number(data.buyin)||0);
+    data.addonPrice = Math.max(0,Number(data.addonPrice)||0);
+    data.rebuyPrice = Math.max(0,Number(data.rebuyPrice)||0);
+    data.paidPlaces = Math.max(1,Math.floor(Number(data.paidPlaces)||1));
+    data.players = data.players.map((p,i)=>({
+      id:p.id || (Date.now()+i).toString(36),
+      pseudo:String(p.pseudo||"Joueur").trim(),
+      paid:!!p.paid,
+      addons:Math.max(0,Math.floor(Number(p.addons)||0)),
+      rebuys:Math.max(0,Math.floor(Number(p.rebuys)||0))
+    }));
+  }
+
+  function save(){
+    localStorage.setItem(KEY,JSON.stringify(data));
+  }
+
+  function toast(text){
+    $("toast").textContent=text;
+    $("toast").classList.add("show");
+    clearTimeout(toast.t);
+    toast.t=setTimeout(()=>$("toast").classList.remove("show"),1800);
+  }
+
+  function playerTotal(p){
+    if(!p.paid) return 0;
+    return data.buyin + p.addons*data.addonPrice + p.rebuys*data.rebuyPrice;
+  }
+
+  function totalPrizepool(){
+    return data.players.reduce((s,p)=>s+playerTotal(p),0);
+  }
+
+  function addPlayer(){
+    const name=$("pseudo").value.trim();
+    if(!name) return toast("Entre un pseudo.");
+    if(data.players.some(p=>p.pseudo.localeCompare(name,"fr",{sensitivity:"base"})===0)) return toast("Ce joueur existe déjà.");
+    data.players.push({id:crypto.randomUUID?.() || Date.now().toString(36)+Math.random().toString(36).slice(2),pseudo:name,paid:false,addons:0,rebuys:0});
+    $("pseudo").value="";
+    save(); render();
+  }
+
+  function changeCount(id,type,delta){
+    const p=data.players.find(p=>p.id===id);
+    if(!p || !p.paid) return;
+    p[type]=Math.max(0,p[type]+delta);
+    save();render();
+  }
+
+  function togglePaid(id){
+    const p=data.players.find(p=>p.id===id);
+    if(!p)return;
+    p.paid=!p.paid;
+    if(!p.paid){p.addons=0;p.rebuys=0}
+    save();render();
+  }
+
+  function removePlayer(id){
+    const p=data.players.find(p=>p.id===id);
+    if(p && confirm("Supprimer "+p.pseudo+" ?")){
+      data.players=data.players.filter(x=>x.id!==id);
+      save();render();
+    }
+  }
+
+  function playerCard(p){
+    const row=document.createElement("div");
+    row.className="player"+(p.paid?" paid":"");
+    row.innerHTML=`
+      <div class="player-name">${escapeHtml(p.pseudo)}</div>
+      <div class="player-total">${euro(playerTotal(p))}</div>
+      <div class="player-actions">
+        ${p.paid ? `
+        <span class="pill">Add-on <button class="mini-btn" data-a="addons" data-d="-1">−</button><strong>${p.addons}</strong><button class="mini-btn" data-a="addons" data-d="1">+</button></span>
+        <span class="pill">Re-buy <button class="mini-btn" data-a="rebuys" data-d="-1">−</button><strong>${p.rebuys}</strong><button class="mini-btn" data-a="rebuys" data-d="1">+</button></span>` : ""}
+        <button class="btn btn-small ${p.paid?"":"btn-gold"} pay-btn">${p.paid?"Annuler paiement":"Entrée payée"}</button>
+        <button class="btn btn-small btn-danger delete">×</button>
+      </div>`;
+    row.querySelectorAll("[data-a]").forEach(b=>b.onclick=()=>changeCount(p.id,b.dataset.a,Number(b.dataset.d)));
+    row.querySelector(".pay-btn").onclick=()=>togglePaid(p.id);
+    row.querySelector(".delete").onclick=()=>removePlayer(p.id);
+    return row;
+  }
+
+  function escapeHtml(s){
+    return s.replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#039;"}[c]));
+  }
+
+  function prizeDistribution(){
+    const paidCount=data.players.filter(p=>p.paid).length;
+    const places=Math.min(Math.max(1,data.paidPlaces),Math.max(1,paidCount));
+    const pool=totalPrizepool();
+    if(pool<=0) return [];
+    if(places===1) return [{place:1,amount:round(pool)}];
+
+    const lastRefund=Math.min(data.buyin,pool);
+    const remaining=round(pool-lastRefund);
+    const n=places-1;
+    const weightSum=n*(n+1)/2;
+    const result=[];
+    let distributed=0;
+    for(let place=1;place<=n;place++){
+      const weight=n-place+1;
+      let amount;
+      if(place===n) amount=round(remaining-distributed);
+      else{
+        amount=round(remaining*weight/weightSum);
+        distributed=round(distributed+amount);
       }
+      result.push({place,amount});
+    }
+    result.push({place:places,amount:round(lastRefund)});
+    return result;
+  }
+
+  function renderPrizes(){
+    const box=$("prizes");
+    box.innerHTML="";
+    const dist=prizeDistribution();
+    if(!dist.length){
+      box.innerHTML='<div class="empty">Aucun prizepool à répartir.</div>';
+      $("prizeRule").textContent="";
+      return;
+    }
+    dist.forEach(x=>{
+      const row=document.createElement("div");
+      row.className="prize";
+      row.innerHTML=`<span>${x.place===1?"1er":x.place+"e"} place</span><strong>${euro(x.amount)}</strong>`;
+      box.appendChild(row);
+    });
+    $("prizeRule").textContent=dist.length>1
+      ? "La dernière place reçoit le buy-in. Le solde est réparti de façon décroissante entre les autres places."
+      : "Une seule place payée : le premier reçoit tout le prizepool.";
+  }
+
+  function render(){
+    $("buyin").value=data.buyin;
+    $("addonPrice").value=data.addonPrice;
+    $("rebuyPrice").value=data.rebuyPrice;
+    $("paidPlaces").value=data.paidPlaces;
+
+    const sorted=[...data.players].sort((a,b)=>a.pseudo.localeCompare(b.pseudo,"fr",{sensitivity:"base"}));
+    const paid=sorted.filter(p=>p.paid), unpaid=sorted.filter(p=>!p.paid);
+    $("unpaid").innerHTML=""; $("paid").innerHTML="";
+    if(!unpaid.length)$("unpaid").innerHTML='<div class="empty">Aucun joueur non payé.</div>';
+    else unpaid.forEach(p=>$("unpaid").appendChild(playerCard(p)));
+    if(!paid.length)$("paid").innerHTML='<div class="empty">Aucun joueur payé.</div>';
+    else paid.forEach(p=>$("paid").appendChild(playerCard(p)));
+
+    const addons=paid.reduce((s,p)=>s+p.addons,0);
+    const rebuys=paid.reduce((s,p)=>s+p.rebuys,0);
+    $("sPlayers").textContent=data.players.length;
+    $("sEntries").textContent=paid.length;
+    $("sAddons").textContent=addons;
+    $("sRebuys").textContent=rebuys;
+    $("sTotal").textContent=euro(totalPrizepool());
+    $("paidCount").textContent=paid.length+" joueur"+(paid.length>1?"s":"");
+    $("unpaidCount").textContent=unpaid.length+" joueur"+(unpaid.length>1?"s":"");
+    renderPrizes();
+  }
+
+  function bindNumber(id,key,integer=false){
+    $(id).addEventListener("input",()=>{
+      let value=integer?Math.floor(Number($(id).value)||1):Math.max(0,Number($(id).value)||0);
+      if(integer)value=Math.max(1,value);
+      data[key]=value;
+      save();render();
     });
   }
-</script>
 
+  $("addPlayer").onclick=addPlayer;
+  $("pseudo").addEventListener("keydown",e=>{if(e.key==="Enter")addPlayer()});
+  bindNumber("buyin","buyin");
+  bindNumber("addonPrice","addonPrice");
+  bindNumber("rebuyPrice","rebuyPrice");
+  bindNumber("paidPlaces","paidPlaces",true);
+
+  $("newTournament").onclick=()=>{
+    if(confirm("Conserver les pseudos et remettre les paiements, add-ons et re-buys à zéro ?")){
+      data.players=data.players.map(p=>({...p,paid:false,addons:0,rebuys:0}));
+      save();render();toast("Nouveau tournoi prêt.");
+    }
+  };
+
+  $("deleteAll").onclick=()=>{
+    if(confirm("Supprimer définitivement tous les joueurs ?")){
+      data.players=[];save();render();
+    }
+  };
+
+  $("sms").onclick=()=>{
+    const paid=data.players.filter(p=>p.paid).sort((a,b)=>a.pseudo.localeCompare(b.pseudo,"fr"));
+    const prizes=prizeDistribution();
+    if(!paid.length)return toast("Aucun joueur payé.");
+    const text=[
+      "POKLISTERED",
+      `Buy-in : ${euro(data.buyin)}`,
+      "",
+      ...paid.map((p,i)=>`${i+1}. ${p.pseudo} — entrée + ${p.addons} add-on(s) + ${p.rebuys} re-buy(s) = ${euro(playerTotal(p))}`),
+      "",
+      `Prizepool : ${euro(totalPrizepool())}`,
+      "Répartition :",
+      ...prizes.map(x=>`${x.place===1?"1er":x.place+"e"} : ${euro(x.amount)}`)
+    ].join("\n");
+    if(navigator.share) navigator.share({title:"Bilan Poklistered",text}).catch(()=>{});
+    else location.href="sms:?body="+encodeURIComponent(text);
+  };
+
+  load();render();
+
+  if("serviceWorker" in navigator){
+    window.addEventListener("load",()=>navigator.serviceWorker.register("./service-worker.js",{scope:"./"}).then(r=>r.update()).catch(console.error));
+  }
+})();
+</script>
 </body>
 </html>

@@ -1,10 +1,10 @@
 {
   "id": "./",
-  "name": "Poklistered - Paiements tournoi",
+  "name": "Poklistered - Tournoi Poker",
   "short_name": "Poklistered",
-  "description": "Gestion des paiements, add-ons, re-buys et du prizepool des tournois de poker.",
+  "description": "Gestion des entrées, add-ons, re-buys et du prizepool.",
   "lang": "fr-FR",
-  "start_url": "./?source=pwa",
+  "start_url": "./?pwa=2",
   "scope": "./",
   "display": "standalone",
   "display_override": [
@@ -12,8 +12,8 @@
     "minimal-ui"
   ],
   "orientation": "portrait",
-  "background_color": "#0f172a",
-  "theme_color": "#111827",
+  "background_color": "#080a0e",
+  "theme_color": "#090b0f",
   "icons": [
     {
       "src": "./icon-192.png",

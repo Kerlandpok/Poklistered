@@ -1,25 +1,24 @@
-POKLISTED — INSTALLATION SUR GITHUB PAGES
+POKLISTERED V2 — INSTALLATION
 
-1. Dans le dépôt GitHub Poklistered, remplace les fichiers suivants :
-   - index.html
-   - manifest.webmanifest
-   - service-worker.js
-   - icon-192.png
-   - icon-512.png
+Remplace sur GitHub les fichiers :
+- index.html
+- manifest.webmanifest
+- service-worker.js
+- icon-192.png
+- icon-512.png
 
-2. Ajoute aussi :
-   - icon-maskable-512.png
+Ajoute aussi :
+- icon-maskable-512.png
+- logo.png
 
-3. Valide avec « Commit changes ».
+Valide avec Commit changes, attends 2 à 3 minutes, puis ouvre :
+https://kerlandpok.github.io/Poklistered/?v=20
 
-4. Attends environ 1 à 3 minutes.
-
-5. Sur Android, ouvre :
-   https://kerlandpok.github.io/Poklistered/?v=7
-
-6. Dans Chrome : menu ⋮ puis « Installer l'application ».
-
-Si Chrome affiche encore l'ancienne version :
-- supprime l'ancien raccourci ou l'ancienne application ;
-- efface les données du site kerlandpok.github.io dans les paramètres de Chrome ;
-- rouvre l'adresse avec ?v=7.
+Cette version contient :
+- buy-in commun indépendant du pseudo ;
+- modification automatique pour tous les joueurs ;
+- cartes joueurs plus fines ;
+- compteurs + / - pour add-ons et re-buys ;
+- logo intégré ;
+- prizepool automatique ;
+- sauvegarde locale et migration des anciens joueurs.
