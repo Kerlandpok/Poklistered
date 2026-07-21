@@ -1,0 +1,9 @@
+PWA Paiements Tournoi
+
+La PWA doit être publiée sur une adresse HTTPS pour être installable dans Chrome.
+
+Après publication :
+1. Ouvrir l’adresse dans Chrome sur le Xiaomi.
+2. Appuyer sur « Installer l’application » dans la page.
+3. L’application fonctionnera ensuite hors ligne.
+4. Les joueurs resteront sauvegardés sur le téléphone.

@@ -1,0 +1,397 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <meta name="theme-color" content="#111827" />
+  <meta name="description" content="Gestion des paiements de tournoi." />
+  <meta name="mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <link rel="manifest" href="manifest.webmanifest" />
+  <link rel="apple-touch-icon" href="icons/icon-192.png" />
+  <title>Paiements tournoi</title>
+  <style>
+    :root{
+      --bg:#0f172a; --card:#111827; --soft:#1f2937; --line:#374151;
+      --text:#f9fafb; --muted:#9ca3af; --accent:#f59e0b; --accent2:#fbbf24;
+      --danger:#ef4444; --success:#22c55e;
+    }
+    *{box-sizing:border-box}
+    body{
+      margin:0;
+      font-family:system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+      background:linear-gradient(180deg,#0b1220 0%,var(--bg) 100%);
+      color:var(--text);
+      min-height:100vh;
+    }
+    .app{
+      width:min(760px,100%);
+      margin:0 auto;
+      padding:20px 14px calc(28px + env(safe-area-inset-bottom));
+    }
+    h1{margin:4px 0 6px;font-size:clamp(1.7rem,7vw,2.4rem);line-height:1.05}
+    .subtitle{color:var(--muted);margin:0 0 18px}
+    .card{
+      background:rgba(17,24,39,.96);
+      border:1px solid rgba(255,255,255,.08);
+      border-radius:18px;
+      padding:16px;
+      box-shadow:0 14px 35px rgba(0,0,0,.28);
+      margin-bottom:14px;
+    }
+    label{display:block;font-weight:700;margin-bottom:7px}
+    input,button{font:inherit}
+    input[type="text"], input[type="number"]{
+      width:100%;
+      border:1px solid var(--line);
+      background:#0b1220;
+      color:var(--text);
+      border-radius:12px;
+      padding:13px 12px;
+      outline:none;
+    }
+    input:focus{border-color:var(--accent);box-shadow:0 0 0 3px rgba(245,158,11,.16)}
+    .add-grid{display:grid;grid-template-columns:1fr 110px;gap:10px}
+    .actions{display:flex;gap:10px;margin-top:12px;flex-wrap:wrap}
+    button{
+      border:0;border-radius:12px;padding:13px 15px;font-weight:800;cursor:pointer;
+    }
+    .primary{flex:1;color:#111827;background:linear-gradient(135deg,var(--accent2),var(--accent))}
+    .secondary{background:var(--soft);color:var(--text);border:1px solid var(--line)}
+    .danger{background:rgba(239,68,68,.14);color:#fecaca;border:1px solid rgba(239,68,68,.4)}
+    .summary{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}
+    .stat{
+      background:#0b1220;border:1px solid var(--line);border-radius:14px;
+      padding:13px 10px;text-align:center;
+    }
+    .stat strong{display:block;color:var(--accent2);font-size:1.4rem;margin-top:3px}
+    .list{display:grid;gap:10px}
+    .player{
+      display:grid;
+      grid-template-columns:1fr auto auto auto;
+      align-items:center;
+      gap:10px;
+      background:#0b1220;
+      border:1px solid var(--line);
+      border-radius:14px;
+      padding:11px;
+    }
+    .player.paid{
+      border-color:rgba(34,197,94,.65);
+      background:rgba(34,197,94,.08);
+    }
+    .check{
+      width:28px;height:28px;
+      accent-color:var(--success);
+      cursor:pointer;
+    }
+    .player-name{font-weight:800;overflow-wrap:anywhere}
+    .amount{color:var(--success);font-weight:900;white-space:nowrap}
+    .delete{
+      padding:9px 11px;background:rgba(239,68,68,.12);color:#fecaca;
+      border:1px solid rgba(239,68,68,.35);
+    }
+    .empty{
+      color:var(--muted);text-align:center;padding:22px 8px;
+      border:1px dashed var(--line);border-radius:14px;
+    }
+    .note{color:var(--muted);font-size:.9rem;margin:10px 0 0}
+    .footer{text-align:center;color:var(--muted);font-size:.82rem;margin-top:16px}
+    @media (max-width:520px){
+      .add-grid{grid-template-columns:1fr 95px}
+      .summary{grid-template-columns:1fr}
+      .player{grid-template-columns:1fr auto}
+      .player button{width:100%}
+      .delete{grid-column:auto}
+    }
+  </style>
+</head>
+<body>
+  <main class="app">
+    <h1>Paiements tournoi</h1>
+    <p class="subtitle">Enregistre les joueurs une seule fois, puis coche ceux qui ont payé.</p>
+
+    <section class="card">
+      <div class="add-grid">
+        <div>
+          <label for="pseudo">Nouveau joueur</label>
+          <input id="pseudo" type="text" placeholder="Ex. Kerland" autocomplete="off" />
+        </div>
+        <div>
+          <label for="montant">Montant</label>
+          <input id="montant" type="number" min="0" step="0.01" value="10" inputmode="decimal" />
+        </div>
+      </div>
+      <div class="actions">
+        <button class="primary" id="ajouter">Ajouter à la liste</button>
+        <button class="secondary" id="installerApp" hidden>Installer l’application</button>
+        <button class="secondary" id="nouveauTournoi">Nouveau tournoi</button>
+      </div>
+      <p class="note" id="etatSauvegarde">Les pseudos et les coches sont sauvegardés automatiquement.</p>
+    </section>
+
+    <section class="card">
+      <div class="summary">
+        <div class="stat">Joueurs enregistrés<strong id="nbJoueurs">0</strong></div>
+        <div class="stat">Ont payé<strong id="nbPayes">0</strong></div>
+        <div class="stat">Total encaissé<strong id="total">0,00 €</strong></div>
+      </div>
+    </section>
+
+    <section class="card">
+      <h2 style="margin:0 0 12px;color:#fbbf24;">Non payés</h2>
+      <div id="listeNonPayes" class="list"></div>
+    </section>
+
+    <section class="card">
+      <h2 style="margin:0 0 12px;color:#22c55e;">Payés</h2>
+      <div id="listePayes" class="list"></div>
+    </section>
+
+    <section class="card">
+      <div class="actions">
+        <button class="primary" id="envoyerSms">Envoyer la liste par SMS</button>
+        <button class="secondary" id="toutCocher">Tout cocher</button>
+        <button class="secondary" id="toutDecocher">Tout décocher</button>
+        <button class="danger" id="vider">Supprimer tous les joueurs</button>
+      </div>
+    </section>
+
+    <div class="footer">Application autonome — les données restent sur ce téléphone.</div>
+  </main>
+
+  <script>
+    const STORAGE_KEY = "liste-joueurs-paiements-v3";
+    let joueurs = [];
+
+    const pseudo = document.getElementById("pseudo");
+    const montant = document.getElementById("montant");
+    const listeNonPayes = document.getElementById("listeNonPayes");
+    const listePayes = document.getElementById("listePayes");
+    const nbJoueurs = document.getElementById("nbJoueurs");
+    const nbPayes = document.getElementById("nbPayes");
+    const total = document.getElementById("total");
+
+    function euro(valeur){
+      return new Intl.NumberFormat("fr-FR", {
+        style:"currency", currency:"EUR"
+      }).format(valeur);
+    }
+
+    function sauvegarder(){
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(joueurs));
+      const etat = document.getElementById("etatSauvegarde");
+      const heure = new Date().toLocaleTimeString("fr-FR", {hour:"2-digit", minute:"2-digit"});
+      etat.textContent = "Sauvegardé automatiquement à " + heure;
+    }
+
+    function charger(){
+      try{
+        const data = JSON.parse(localStorage.getItem(STORAGE_KEY) || "[]");
+        joueurs = Array.isArray(data) ? data : [];
+      }catch{
+        joueurs = [];
+      }
+    }
+
+    function creerLigne(joueur){
+      const index = joueurs.findIndex(j => j.id === joueur.id);
+      const ligne = document.createElement("div");
+      ligne.className = "player" + (joueur.paye ? " paid" : "");
+
+      const nom = document.createElement("div");
+      nom.className = "player-name";
+      nom.textContent = joueur.pseudo;
+
+      const somme = document.createElement("div");
+      somme.className = "amount";
+      somme.textContent = joueur.paye ? euro(joueur.montant) : euro(joueur.montant);
+
+      const action = document.createElement("button");
+      action.className = joueur.paye ? "secondary" : "primary";
+      action.style.flex = "initial";
+      action.style.padding = "9px 11px";
+      action.textContent = joueur.paye ? "Remettre non payé" : "Marquer payé";
+
+      action.addEventListener("click", () => {
+        const message = joueur.paye
+          ? "Confirmer que " + joueur.pseudo + " n'a finalement pas payé ?"
+          : "Confirmer le paiement de " + joueur.pseudo + " ?";
+        if(confirm(message)){
+          joueurs[index].paye = !joueur.paye;
+          sauvegarder();
+          afficher();
+        }
+      });
+
+      const supprimer = document.createElement("button");
+      supprimer.className = "delete";
+      supprimer.textContent = "Supprimer";
+      supprimer.addEventListener("click", () => {
+        if(confirm("Supprimer " + joueur.pseudo + " de la liste permanente ?")){
+          joueurs.splice(index, 1);
+          sauvegarder();
+          afficher();
+        }
+      });
+
+      ligne.append(nom, somme, action, supprimer);
+      return ligne;
+    }
+
+    function afficher(){
+      listeNonPayes.innerHTML = "";
+      listePayes.innerHTML = "";
+
+      const tries = joueurs
+        .slice()
+        .sort((a,b) => a.pseudo.localeCompare(b.pseudo, "fr", {sensitivity:"base"}));
+
+      const nonPayes = tries.filter(j => !j.paye);
+      const payes = tries.filter(j => j.paye);
+
+      if(nonPayes.length === 0){
+        listeNonPayes.innerHTML = '<div class="empty">Tous les joueurs ont payé.</div>';
+      } else {
+        nonPayes.forEach(joueur => listeNonPayes.appendChild(creerLigne(joueur)));
+      }
+
+      if(payes.length === 0){
+        listePayes.innerHTML = '<div class="empty">Aucun paiement enregistré.</div>';
+      } else {
+        payes.forEach(joueur => listePayes.appendChild(creerLigne(joueur)));
+      }
+
+      const totalEncaisse = payes.reduce((acc, j) => acc + Number(j.montant || 0), 0);
+      nbJoueurs.textContent = joueurs.length;
+      nbPayes.textContent = payes.length;
+      total.textContent = euro(totalEncaisse);
+    }
+
+    function ajouterJoueur(){
+      const nom = pseudo.value.trim();
+      const valeur = Number(String(montant.value).replace(",", "."));
+
+      if(!nom){
+        alert("Entre un pseudo.");
+        pseudo.focus();
+        return;
+      }
+
+      if(!Number.isFinite(valeur) || valeur < 0){
+        alert("Entre un montant valide.");
+        montant.focus();
+        return;
+      }
+
+      const existe = joueurs.some(j => j.pseudo.toLowerCase() === nom.toLowerCase());
+      if(existe){
+        alert("Ce joueur est déjà dans la liste.");
+        return;
+      }
+
+      joueurs.push({
+        id: Date.now().toString(36) + Math.random().toString(36).slice(2),
+        pseudo: nom,
+        montant: Math.round(valeur * 100) / 100,
+        paye: false
+      });
+
+      joueurs.sort((a,b)=>a.pseudo.localeCompare(b.pseudo,"fr",{sensitivity:"base"}));
+
+      sauvegarder();
+      afficher();
+      pseudo.value = "";
+      pseudo.focus();
+    }
+
+    document.getElementById("ajouter").addEventListener("click", ajouterJoueur);
+    pseudo.addEventListener("keydown", e => { if(e.key === "Enter") ajouterJoueur(); });
+    montant.addEventListener("keydown", e => { if(e.key === "Enter") ajouterJoueur(); });
+
+    document.getElementById("nouveauTournoi").addEventListener("click", () => {
+      if(confirm("Démarrer un nouveau tournoi ? Les pseudos seront conservés et toutes les coches seront remises à zéro.")){
+        joueurs = joueurs.map(j => ({...j, paye:false}));
+        sauvegarder();
+        afficher();
+      }
+    });
+
+    document.getElementById("envoyerSms").addEventListener("click", () => {
+      const payes = joueurs
+        .filter(j => j.paye)
+        .sort((a,b) => a.pseudo.localeCompare(b.pseudo, "fr", {sensitivity:"base"}));
+
+      if(payes.length === 0){
+        alert("Aucun joueur n'a encore payé.");
+        return;
+      }
+
+      const totalEncaisse = payes.reduce((acc, j) => acc + Number(j.montant || 0), 0);
+      const message = [
+        "Joueurs ayant payé :",
+        "",
+        ...payes.map((j, i) => (i + 1) + ". " + j.pseudo + " - " + euro(j.montant)),
+        "",
+        "Nombre de joueurs : " + payes.length,
+        "Total encaissé : " + euro(totalEncaisse)
+      ].join("\n");
+
+      const smsUrl = "sms:?body=" + encodeURIComponent(message);
+      window.location.href = smsUrl;
+    });
+
+    document.getElementById("toutCocher").addEventListener("click", () => {
+      joueurs = joueurs.map(j => ({...j, paye:true}));
+      sauvegarder();
+      afficher();
+    });
+
+    document.getElementById("toutDecocher").addEventListener("click", () => {
+      joueurs = joueurs.map(j => ({...j, paye:false}));
+      sauvegarder();
+      afficher();
+    });
+
+    document.getElementById("vider").addEventListener("click", () => {
+      if(confirm("Supprimer définitivement tous les pseudos enregistrés ?")){
+        joueurs = [];
+        sauvegarder();
+        afficher();
+      }
+    });
+
+    charger();
+    afficher();
+  </script>
+  <script>
+    let installation = null;
+    const boutonInstallation = document.getElementById("installerApp");
+
+    window.addEventListener("beforeinstallprompt", event => {
+      event.preventDefault();
+      installation = event;
+      boutonInstallation.hidden = false;
+    });
+
+    boutonInstallation.addEventListener("click", async () => {
+      if (!installation) return;
+      installation.prompt();
+      await installation.userChoice;
+      installation = null;
+      boutonInstallation.hidden = true;
+    });
+
+    window.addEventListener("appinstalled", () => {
+      boutonInstallation.hidden = true;
+      installation = null;
+    });
+
+    if ("serviceWorker" in navigator) {
+      window.addEventListener("load", () => {
+        navigator.serviceWorker.register("./service-worker.js");
+      });
+    }
+  </script>
+</body>
+</html>
