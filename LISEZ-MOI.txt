@@ -1,4 +1,4 @@
-POKLISTERED V2 — INSTALLATION
+POKLISTERED V3 — INSTALLATION
 
 Remplace sur GitHub les fichiers :
 - index.html
@@ -12,7 +12,7 @@ Ajoute aussi :
 - logo.png
 
 Valide avec Commit changes, attends 2 à 3 minutes, puis ouvre :
-https://kerlandpok.github.io/Poklistered/?v=20
+https://kerlandpok.github.io/Poklistered/?v=30
 
 Cette version contient :
 - buy-in commun indépendant du pseudo ;
@@ -22,3 +22,6 @@ Cette version contient :
 - logo intégré ;
 - prizepool automatique ;
 - sauvegarde locale et migration des anciens joueurs.
+- cartes des joueurs payés repliées par défaut ;
+- bilan partagé simplifié ;
+- répertoire permanent des joueurs conservé entre les tournois.
