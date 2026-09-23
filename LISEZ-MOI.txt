@@ -1,4 +1,4 @@
-POKLISTERED V3 — INSTALLATION
+POKLISTERED V4 — INSTALLATION
 
 Remplace sur GitHub les fichiers :
 - index.html
@@ -12,7 +12,7 @@ Ajoute aussi :
 - logo.png
 
 Valide avec Commit changes, attends 2 à 3 minutes, puis ouvre :
-https://kerlandpok.github.io/Poklistered/?v=30
+https://kerlandpok.github.io/Poklistered/?v=40
 
 Cette version contient :
 - buy-in commun indépendant du pseudo ;
@@ -25,3 +25,6 @@ Cette version contient :
 - cartes des joueurs payés repliées par défaut ;
 - bilan partagé simplifié ;
 - répertoire permanent des joueurs conservé entre les tournois.
+- nouvelle grille de gains de 1 à 6 places ;
+- arrondi des gains par tranches de 10 € en conservant le prizepool total ;
+- remboursement du buy-in à la dernière place à partir de 3 places, sans dépasser l’avant-dernière.

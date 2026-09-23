@@ -168,8 +168,8 @@
   <section class="card">
     <h2>Répartition du prizepool</h2>
     <div class="prize-grid">
-      <div><label for="paidPlaces">Places payées</label><input id="paidPlaces" type="number" min="1" step="1" inputmode="numeric"></div>
-      <div class="rules">Nombre libre, limité au nombre de joueurs ayant payé. La dernière place rembourse toujours le buy-in.</div>
+      <div><label for="paidPlaces">Places payées</label><input id="paidPlaces" type="number" min="1" max="6" step="1" inputmode="numeric"></div>
+      <div class="rules">De 1 à 6 places. À partir de 3 places, la dernière rembourse le buy-in sans dépasser l’avant-dernière.</div>
     </div>
     <div class="prizes" id="prizes"></div>
     <div class="rules" id="prizeRule"></div>
@@ -262,7 +262,7 @@
     data.buyin = Math.max(0,Number(data.buyin)||0);
     data.addonPrice = Math.max(0,Number(data.addonPrice)||0);
     data.rebuyPrice = Math.max(0,Number(data.rebuyPrice)||0);
-    data.paidPlaces = Math.max(1,Math.floor(Number(data.paidPlaces)||1));
+    data.paidPlaces = Math.min(6,Math.max(1,Math.floor(Number(data.paidPlaces)||1)));
     data.players = data.players.map((p,i)=>({
       id:p.id || (Date.now()+i).toString(36),
       pseudo:String(p.pseudo||"Joueur").trim(),
@@ -350,28 +350,59 @@
 
   function prizeDistribution(){
     const paidCount=data.players.filter(p=>p.paid).length;
-    const places=Math.min(Math.max(1,data.paidPlaces),Math.max(1,paidCount));
+    const places=Math.min(6,Math.max(1,data.paidPlaces),Math.max(1,paidCount));
     const pool=totalPrizepool();
     if(pool<=0) return [];
     if(places===1) return [{place:1,amount:round(pool)}];
 
-    const lastRefund=Math.min(data.buyin,pool);
-    const remaining=round(pool-lastRefund);
-    const n=places-1;
-    const weightSum=n*(n+1)/2;
-    const result=[];
-    let distributed=0;
-    for(let place=1;place<=n;place++){
-      const weight=n-place+1;
-      let amount;
-      if(place===n) amount=round(remaining-distributed);
-      else{
-        amount=round(remaining*weight/weightSum);
-        distributed=round(distributed+amount);
+    const weights={
+      2:[60,40],
+      3:[2,1],
+      4:[50,30,20],
+      5:[40,30,20,10],
+      6:[35,25,20,15,5]
+    }[places];
+    const lastRefund=places>=3?Math.min(data.buyin,pool):0;
+    const amountToShare=round(pool-lastRefund);
+    const weightSum=weights.reduce((sum,value)=>sum+value,0);
+    const raw=weights.map(weight=>amountToShare*weight/weightSum);
+    const rounded=raw.map(value=>Math.round(value/10)*10);
+
+    // Corrige les arrondis de 10 € sans modifier le montant total distribué.
+    let difference=round(amountToShare-rounded.reduce((sum,value)=>sum+value,0));
+    while(Math.abs(difference)>=9.999){
+      if(difference>0){
+        let best=0;
+        for(let i=1;i<rounded.length;i++){
+          if(raw[i]-rounded[i]>raw[best]-rounded[best])best=i;
+        }
+        rounded[best]+=10;
+        difference=round(difference-10);
+      }else{
+        let best=-1;
+        for(let i=0;i<rounded.length;i++){
+          if(rounded[i]>=10 && (best<0 || rounded[i]-raw[i]>rounded[best]-raw[best]))best=i;
+        }
+        if(best<0)break;
+        rounded[best]-=10;
+        difference=round(difference+10);
       }
-      result.push({place,amount});
     }
-    result.push({place:places,amount:round(lastRefund)});
+    if(Math.abs(difference)>0.001)rounded[0]=round(rounded[0]+difference);
+
+    const result=rounded.map((amount,index)=>({place:index+1,amount:round(amount)}));
+    if(places>=3){
+      const previous=result[result.length-1];
+      const last={place:places,amount:round(lastRefund)};
+      if(previous.amount<last.amount){
+        const needed=round(last.amount-previous.amount);
+        const donor=result[0];
+        const transferable=Math.min(needed,Math.max(0,donor.amount-last.amount));
+        donor.amount=round(donor.amount-transferable);
+        previous.amount=round(previous.amount+transferable);
+      }
+      result.push(last);
+    }
     return result;
   }
 
@@ -390,8 +421,10 @@
       row.innerHTML=`<span>${x.place===1?"1er":x.place+"e"} place</span><strong>${euro(x.amount)}</strong>`;
       box.appendChild(row);
     });
-    $("prizeRule").textContent=dist.length>1
-      ? "La dernière place reçoit le buy-in. Le solde est réparti de façon décroissante entre les autres places."
+    $("prizeRule").textContent=dist.length>2
+      ? "La dernière place reçoit le buy-in sans dépasser l’avant-dernière. Les autres gains sont répartis selon la grille et arrondis par tranches de 10 €."
+      : dist.length===2
+      ? "Répartition 60 % / 40 %, arrondie par tranches de 10 €."
       : "Une seule place payée : le premier reçoit tout le prizepool.";
   }
 
@@ -424,7 +457,7 @@
   function bindNumber(id,key,integer=false){
     $(id).addEventListener("input",()=>{
       let value=integer?Math.floor(Number($(id).value)||1):Math.max(0,Number($(id).value)||0);
-      if(integer)value=Math.max(1,value);
+      if(integer)value=Math.min(6,Math.max(1,value));
       data[key]=value;
       save();render();
     });
