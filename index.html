@@ -26,7 +26,7 @@
       font-family:Inter,system-ui,-apple-system,"Segoe UI",sans-serif;
       background:radial-gradient(circle at top,#17130c 0,#080a0e 35%);
     }
-    button,input{font:inherit}
+    button,input,select{font:inherit}
     button{cursor:pointer}
     .app{width:min(760px,100%);margin:auto;padding:14px 12px 42px}
     .topbar{
@@ -43,11 +43,11 @@
     }
     h2{margin:0 0 11px;font-size:1.08rem;color:var(--gold2)}
     label{display:block;color:#d7d9de;font-weight:700;font-size:.86rem;margin-bottom:6px}
-    input{
+    input,select{
       width:100%;border:1px solid var(--line);background:#080b10;color:var(--text);
       border-radius:11px;padding:11px 12px;outline:none;
     }
-    input:focus{border-color:var(--gold);box-shadow:0 0 0 3px rgba(215,166,60,.12)}
+    input:focus,select:focus{border-color:var(--gold);box-shadow:0 0 0 3px rgba(215,166,60,.12)}
     .settings{display:grid;grid-template-columns:repeat(3,1fr);gap:9px}
     .setting-note{margin-top:9px;color:var(--muted);font-size:.8rem}
     .add-row{display:grid;grid-template-columns:1fr auto;gap:9px}
@@ -168,7 +168,7 @@
   <section class="card">
     <h2>Répartition du prizepool</h2>
     <div class="prize-grid">
-      <div><label for="paidPlaces">Places payées</label><input id="paidPlaces" type="number" min="1" max="6" step="1" inputmode="numeric"></div>
+      <div><label for="paidPlaces">Places payées</label><select id="paidPlaces"><option value="1">1</option><option value="2">2</option><option value="3">3</option><option value="4">4</option><option value="5">5</option><option value="6">6</option></select></div>
       <div class="rules">De 1 à 6 places. À partir de 3 places, la dernière rembourse le buy-in sans dépasser l’avant-dernière.</div>
     </div>
     <div class="prizes" id="prizes"></div>
