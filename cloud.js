@@ -34,11 +34,16 @@ function empty(snapshot){return adapter.empty(snapshot.data);}
 function status(text){lastStatus=text;const label=document.getElementById('ker-cloud-label');if(label)label.textContent=text;}
 function ui(){
  if(document.getElementById('ker-cloud'))return;
- let style=document.createElement('style');style.textContent='#ker-cloud{position:fixed;right:12px;bottom:85px;z-index:1000;font:12px system-ui;max-width:calc(100vw - 24px)}#ker-cloud>button{background:#243b32;color:#fff;border:1px solid #7da68d;border-radius:14px;padding:9px 13px;box-shadow:0 3px 15px #0003;font:inherit}#ker-cloud-panel{position:absolute;bottom:45px;right:0;width:300px;max-width:calc(100vw - 24px);max-height:65vh;overflow:auto;background:#fff;color:#243b32;padding:18px;border:1px solid #cbd5ce;border-radius:16px;box-shadow:0 5px 30px #0003}#ker-cloud-panel[hidden]{display:none}#ker-cloud-panel p{font:14px/1.5 system-ui;margin:0 0 12px}#ker-cloud-panel button,#ker-cloud-panel a{display:block;text-align:left;width:100%;margin:8px 0;padding:10px;background:#e8f0ea;color:#243b32;border:0;border-radius:8px;font:14px system-ui;text-decoration:none;box-sizing:border-box}';document.head.append(style);
- let box=document.createElement('div');box.id='ker-cloud';box.innerHTML='<button type="button" id="ker-cloud-toggle"><span id="ker-cloud-label"></span> ▾</button><section id="ker-cloud-panel" hidden></section>';document.body.append(box);
- document.getElementById('ker-cloud-toggle').onclick=()=>{const p=document.getElementById('ker-cloud-panel');p.hidden=!p.hidden;if(!p.hidden)panel();};status(lastStatus);
+ const style=document.createElement('style');style.textContent='#ker-cloud{width:min(420px,calc(100vw - 32px));max-height:80dvh;padding:0;border:1px solid #cbd5ce;border-radius:16px;background:#fff;color:#243b32;font:14px/1.5 system-ui;box-shadow:0 5px 30px #0003}#ker-cloud::backdrop{background:#0007}#ker-cloud header{display:flex;align-items:center;justify-content:space-between;gap:16px;padding:16px 18px;border-bottom:1px solid #cbd5ce}#ker-cloud h2{margin:0;font:600 18px system-ui}#ker-cloud-close{padding:8px 12px;border:0;border-radius:8px;background:#e8f0ea;color:#243b32;font:inherit}#ker-cloud-panel{padding:18px}#ker-cloud-panel[hidden]{display:none}#ker-cloud-panel p{font:14px/1.5 system-ui;margin:0 0 12px}#ker-cloud-panel button,#ker-cloud-panel a{display:block;text-align:left;width:100%;margin:8px 0;padding:10px;background:#e8f0ea;color:#243b32;border:0;border-radius:8px;font:14px system-ui;text-decoration:none;box-sizing:border-box}';document.head.append(style);
+ const box=document.createElement('dialog');box.id='ker-cloud';box.setAttribute('aria-labelledby','ker-cloud-title');box.innerHTML='<header><h2 id="ker-cloud-title">Sauvegarde et compte</h2><button type="button" id="ker-cloud-close">Fermer</button></header><section id="ker-cloud-panel" hidden></section>';document.body.append(box);
+ document.getElementById('ker-cloud-close').onclick=closeCloud;
+ box.addEventListener('close',()=>{document.getElementById('ker-cloud-panel').hidden=true;});
 }
-function panel(){let p=document.getElementById('ker-cloud-panel');if(!p)return;p.replaceChildren();let text=document.createElement('p');text.textContent=lastStatus+(account?.email?' · '+account.email:'');p.append(text);
+function showCloud(){ui();document.getElementById('ker-cloud-panel').hidden=false;const dialog=document.getElementById('ker-cloud');if(!dialog.open)dialog.showModal();}
+function closeCloud(){document.getElementById('ker-cloud').close();}
+function openSettings(){ui();if(!(busy&&paused))panel();showCloud();}
+window.addEventListener('ker-cloud-open',openSettings);
+function panel(){let p=document.getElementById('ker-cloud-panel');if(!p)return;p.replaceChildren();let text=document.createElement('p');text.id='ker-cloud-label';text.textContent=lastStatus+(account?.email?' · '+account.email:'');p.append(text);
  if(!account){let a=document.createElement('a');a.href='/signin-with-chatgpt?return_to='+encodeURIComponent(location.pathname+location.search);a.target='_top';a.textContent='Connecter ma sauvegarde';if(window.KerCloudConnect){a.href='#';a.onclick=e=>{e.preventDefault();void window.KerCloudConnect()};}p.append(a);}
  else{button(p,'Réessayer la synchronisation',()=>{paused=false;void sync(true)});button(p,'Mes versions sauvegardées',history);}
  if(paused&&lastStatus.startsWith('Compte différent')){let a=document.createElement('a');a.href='/signout-with-chatgpt?return_to=/';a.target='_top';a.textContent='Changer de compte';if(window.KerCloudDisconnect){a.href='#';a.onclick=e=>{e.preventDefault();void window.KerCloudDisconnect()};}p.append(a);}else if(paused)button(p,'Résoudre les différences entre appareils',()=>void resolveCurrent());
@@ -55,10 +60,10 @@ async function resolve(local,remote,live){
  paused=true;status('Deux versions à rapprocher');
  // Preserve the local version server-side before allowing either choice.
  await push(local,meta.version||0,'/api/storage/recovery');
- ui();let p=document.getElementById('ker-cloud-panel');p.hidden=false;p.replaceChildren();let t=document.createElement('p');t.textContent='Ce téléphone et votre compte contiennent des données différentes. Les deux copies sont protégées dans l’historique. Quelle version utiliser ?';p.append(t);
+ showCloud();let p=document.getElementById('ker-cloud-panel');p.replaceChildren();let t=document.createElement('p');t.textContent='Ce téléphone et votre compte contiennent des données différentes. Les deux copies sont protégées dans l’historique. Quelle version utiliser ?';p.append(t);
  return new Promise(resolve=>{
- button(p,'Utiliser la version de ce téléphone',async()=>{try{const result=await push(local,remote.version);meta={user:remote.user,version:result.version,hash:await digest(local)};setMeta();paused=false;status('Sauvegardé en ligne');p.hidden=true;resolve();}catch(e){status(e.status===409?'Nouvelle modification ailleurs : réessayez':'Synchronisation en attente');}});
- button(p,'Récupérer la version de mon compte',async()=>{try{await applyRemote(remote,live);paused=false;p.hidden=true;resolve();}catch{status('Récupération en attente');}});
+ button(p,'Utiliser la version de ce téléphone',async()=>{try{const result=await push(local,remote.version);meta={user:remote.user,version:result.version,hash:await digest(local)};setMeta();paused=false;status('Sauvegardé en ligne');closeCloud();resolve();}catch(e){status(e.status===409?'Nouvelle modification ailleurs : réessayez':'Synchronisation en attente');}});
+ button(p,'Récupérer la version de mon compte',async()=>{try{await applyRemote(remote,live);paused=false;closeCloud();resolve();}catch{status('Récupération en attente');}});
  });
 }
 async function resolveCurrent(){if(busy)return;busy=true;try{const r=await (await api('/api/storage')).json();account=r;await resolve(await capture(),r,true);}catch{status('Synchronisation en attente');}finally{busy=false}}
@@ -92,7 +97,7 @@ function schedule(){if(scheduled)return;scheduled=true;queueMicrotask(()=>{sched
 Storage.prototype.setItem=function(key,value){originalSet.call(this,key,value);if(key!==META&&key!==RECOVERY)schedule();};
 const originalRemove=Storage.prototype.removeItem;Storage.prototype.removeItem=function(key){originalRemove.call(this,key);if(key!==META&&key!==RECOVERY)schedule();};
 const originalTransaction=IDBDatabase.prototype.transaction;IDBDatabase.prototype.transaction=function(...args){const tx=originalTransaction.apply(this,args);if(args[1]==='readwrite'&&this.name!=='ker-auto-recovery')tx.addEventListener('complete',schedule);return tx;};
-window.KerCloud={start,sync,status};
+window.KerCloud={start,sync,status,openSettings};
 // Adapter for the original standalone apps. Run their scripts after initial restoration.
 function openDb(spec){return new Promise((ok,no)=>{const r=indexedDB.open(spec.name,1);r.onupgradeneeded=()=>{for(let s of spec.stores||[spec.store])if(!r.result.objectStoreNames.contains(s))r.result.createObjectStore(s,s===spec.store?spec.options:undefined);};r.onsuccess=()=>ok(r.result);r.onerror=()=>no(r.error);});}
 async function dbRead(spec){let db=await openDb(spec);try{return await new Promise((ok,no)=>{const t=db.transaction(spec.store),s=t.objectStore(spec.store),kr=s.getAllKeys(),vr=s.getAll();t.oncomplete=()=>ok(kr.result.map((k,i)=>[k,vr.result[i]]));t.onerror=()=>no(t.error);});}finally{db.close();}}
