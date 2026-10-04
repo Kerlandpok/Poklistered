@@ -125,7 +125,7 @@
       .title h1{font-size:1.45rem}
     }
   </style>
-</head>
+<script>window.KER_AUTO_CONFIG={"name":"Poklistered","id":"poklistered","keys":["poklistered-clean-v2","poklistered-player-directory-v1"],"metaKey":"ker-auto-meta-poklistered","recoveryKey":"ker-auto-recovery-poklistered"};window.KER_FIREBASE_CONFIG={"apiKey":"AIzaSyAXXcHGUUAt_PhGIIcfr3-BZj0W-hg1ZBE","authDomain":"kerbudget-test.firebaseapp.com","databaseURL":"https://kerbudget-test-default-rtdb.europe-west1.firebasedatabase.app","projectId":"kerbudget-test","storageBucket":"kerbudget-test.firebasestorage.app","messagingSenderId":"908799978812","appId":"1:908799978812:web:22559268d64f5a7f1b4239"};</script><script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script><script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-auth-compat.js"></script><script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-database-compat.js"></script><script src="firebase-transport.js?v=1"></script><script src="cloud.js?v=1"></script></head>
 <body>
 <div class="app">
   <header class="topbar">
@@ -198,7 +198,7 @@
 </div>
 <div class="toast" id="toast"></div>
 
-<script>
+<script type="text/ker-app">
 (() => {
   const KEY = "poklistered-clean-v2";
   const DIRECTORY_KEY = "poklistered-player-directory-v1";
@@ -533,7 +533,7 @@
   load();render();
 
   if("serviceWorker" in navigator){
-    window.addEventListener("load",()=>navigator.serviceWorker.register("./service-worker.js",{scope:"./"}).then(r=>r.update()).catch(console.error));
+    window.addEventListener("ker-app-ready",()=>navigator.serviceWorker.register("./service-worker.js",{scope:"./"}).then(r=>r.update()).catch(console.error));
   }
 })();
 </script>
